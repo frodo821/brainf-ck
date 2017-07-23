@@ -39,7 +39,7 @@ class Ptr:
         return self.stk[self.ptr] == 0
 
 def time_format(tm):
-    return (str(round(tm // 3600)), str(round((tm // 60) % 60)), str(round(tm % 60, 2)))
+    return (str(round(tm // 3600)), str(round((tm // 60) % 60)), str(round(tm % 60, 5)))
 
 start_time = time.time()
 #char pointer in source code.
