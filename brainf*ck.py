@@ -7,7 +7,9 @@ import sys
 
 class Ptr:
     def __init__(self):
+        #internal pointer
         self.ptr = 0
+        #internal memory
         self.stk = [0] * 3000
     def increase(self):
         self.stk[self.ptr] += 1
@@ -27,9 +29,10 @@ class Ptr:
         print(chr(self.stk[self.ptr]), end='')
     def Is_zero(self):
         return self.stk[self.ptr] == 0
-
+#char pointer in source code.
 scp = 0
 lblst = list()
+#nest count of square brankets.
 lbnest = 0
 try:
     src = open(sys.argv[1])
