@@ -40,7 +40,7 @@ scp = 0
 
 lblst = list()
 
-#nest count of square brankets.
+#nest count of square-brankets.
 lbnest = 0
 
 try:
@@ -49,14 +49,22 @@ except:
     print("cannot read file." ,file=sys.stderr)
     sys.exit(1)
 
+try:
+    dbg = sys.argv[2] == '/d'
+except:
+    dbg = False
+
 code = src.read()
 src.close()
 
 stacks = Ptr()
 
 while True:
-    if len(code) == scp:
+    if len(code) <= scp:
         break
+    if dbg:
+        print("%s: char %d" % (code[scp], scp))
+        print("stack pointer points %d" % stacks.ptr)
     if code[scp] == '>':
         stacks.increase_pointer()
         scp += 1
@@ -76,18 +84,37 @@ while True:
         stacks.get()
         scp += 1
     elif code[scp] == '[':
-        if not scp in lblst:
-            lblst.append(scp)
-            lbnest += 1
+        if dbg:
+            print(lblst)
+            print(scp)
+            print("Current variable content : %d" % stacks.stk[stacks.ptr])
+            print("stacks.Is_zero() = %s" % str(stacks.Is_zero()))
         if not stacks.Is_zero():
+            if not scp in lblst:
+                lblst.append(scp)
+                lbnest += 1
             scp += 1
         else:
+            nlv = 0
             while True:
                 scp += 1
+                if dbg:
+                    print("nest level is %d and additional is %d, basical is %d" % (lbnest + nlv, nlv, lbnest))
+                    print("skipping %s: char %d" % (code[scp], scp))
+                if code[scp] == '[':
+                    nlv += 1
+                    continue
+                if code[scp] == ']' and nlv > 0:
+                    nlv -= 1
+                    continue
                 if code[scp] == ']':
+                    if dbg:
+                        print("closing square branket was found. breaking loop.")
                     scp += 1
                     break
     elif code[scp] == ']':
+        if dbg:
+            print("label list: %s, index: %d" % (str(lblst), lbnest))
         scp = lblst[lbnest - 1]
         del lblst[lbnest - 1]
         lbnest -= 1
