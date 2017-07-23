@@ -8,7 +8,7 @@ class Ptr:
         #internal pointer
         self.ptr = 0
         #internal memory
-        self.stk = [0] * 2999
+        self.stk = [0] * 3000
     def increase(self):
         self.stk[self.ptr] += 1
     def decrease(self):
