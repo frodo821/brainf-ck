@@ -59,64 +59,67 @@ src.close()
 
 stacks = Ptr()
 
-while True:
-    if len(code) <= scp:
-        break
-    if dbg:
-        print("%s: char %d" % (code[scp], scp))
-        print("stack pointer points %d" % stacks.ptr)
-    if code[scp] == '>':
-        stacks.increase_pointer()
-        scp += 1
-    elif code[scp] == '<':
-        stacks.decrease_pointer()
-        scp += 1
-    elif code[scp] == '+':
-        stacks.increase()
-        scp += 1
-    elif code[scp] == '-':
-        stacks.decrease()
-        scp += 1
-    elif code[scp] == '.':
-        stacks.put()
-        scp += 1
-    elif code[scp] == ',':
-        stacks.get()
-        scp += 1
-    elif code[scp] == '[':
+try:
+    while True:
+        if len(code) <= scp:
+            break
         if dbg:
-            print(lblst)
-            print(scp)
-            print("Current variable content : %d" % stacks.stk[stacks.ptr])
-            print("stacks.Is_zero() = %s" % str(stacks.Is_zero()))
-        if not stacks.Is_zero():
-            if not scp in lblst:
-                lblst.append(scp)
-                lbnest += 1
+            print("%s: char %d" % (code[scp], scp))
+            print("stack pointer points %d" % stacks.ptr)
+        if code[scp] == '>':
+            stacks.increase_pointer()
             scp += 1
-        else:
-            nlv = 0
-            while True:
+        elif code[scp] == '<':
+            stacks.decrease_pointer()
+            scp += 1
+        elif code[scp] == '+':
+            stacks.increase()
+            scp += 1
+        elif code[scp] == '-':
+            stacks.decrease()
+            scp += 1
+        elif code[scp] == '.':
+            stacks.put()
+            scp += 1
+        elif code[scp] == ',':
+            stacks.get()
+            scp += 1
+        elif code[scp] == '[':
+            if dbg:
+                print(lblst)
+                print(scp)
+                print("Current variable content : %d" % stacks.stk[stacks.ptr])
+                print("stacks.Is_zero() = %s" % str(stacks.Is_zero()))
+            if not stacks.Is_zero():
+                if not scp in lblst:
+                    lblst.append(scp)
+                    lbnest += 1
                 scp += 1
-                if dbg:
-                    print("nest level is %d and additional is %d, basical is %d" % (lbnest + nlv, nlv, lbnest))
-                    print("skipping %s: char %d" % (code[scp], scp))
-                if code[scp] == '[':
-                    nlv += 1
-                    continue
-                if code[scp] == ']' and nlv > 0:
-                    nlv -= 1
-                    continue
-                if code[scp] == ']':
-                    if dbg:
-                        print("closing square branket was found. breaking loop.")
+            else:
+                nlv = 0
+                while True:
                     scp += 1
-                    break
-    elif code[scp] == ']':
-        if dbg:
-            print("label list: %s, index: %d" % (str(lblst), lbnest))
-        scp = lblst[lbnest - 1]
-        del lblst[lbnest - 1]
-        lbnest -= 1
-    else:
-        scp += 1
+                    if dbg:
+                        print("nest level is %d and additional is %d, basical is %d" % (lbnest + nlv, nlv, lbnest))
+                        print("skipping %s: char %d" % (code[scp], scp))
+                    if code[scp] == '[':
+                        nlv += 1
+                        continue
+                    if code[scp] == ']' and nlv > 0:
+                        nlv -= 1
+                        continue
+                    if code[scp] == ']':
+                        if dbg:
+                            print("closing square branket was found. breaking loop.")
+                        scp += 1
+                        break
+        elif code[scp] == ']':
+            if dbg:
+                print("label list: %s, index: %d" % (str(lblst), lbnest))
+            scp = lblst[lbnest - 1]
+            del lblst[lbnest - 1]
+            lbnest -= 1
+        else:
+            scp += 1
+except:
+    print("syntax error. executing failed." ,file = sys.stderr)
