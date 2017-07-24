@@ -4,9 +4,11 @@ import os
 import sys
 import time
 
+#Internal memory size definition
 MEMSIZE = 30000
 
-class Ptr:
+#This class provides internal memory access
+class Memory:
     def __init__(self):
         #internal pointer
         self.ptr = 0
@@ -38,6 +40,7 @@ class Ptr:
     def Is_zero(self):
         return self.stk[self.ptr] == 0
 
+#returns tuple of time from number. the format is (Hour, Minute, Second).
 def time_format(tm):
     return (str(round(tm // 3600)), str(round((tm // 60) % 60)), str(round(tm % 60, 5)))
 
@@ -45,6 +48,7 @@ start_time = time.time()
 #char pointer in source code.
 scp = 0
 
+#The index list in code of found characters "["
 lblst = list()
 
 #nest count of square-brankets.
@@ -56,6 +60,7 @@ except:
     print("cannot read file." ,file=sys.stderr)
     sys.exit(1)
 
+#Set debug flag
 try:
     dbg = sys.argv[2] == '/d'
 except:
@@ -64,8 +69,10 @@ except:
 code = src.read()
 src.close()
 
-stacks = Ptr()
+#Create memory instance
+stacks = Memory()
 
+#Interpreter main processing part
 try:
     while True:
         if len(code) <= scp:
@@ -129,6 +136,7 @@ try:
         else:
             scp += 1
 except:
+    #TODO: Make this show details of happened error.
     print("syntax error. executing failed." ,file = sys.stderr)
 finally:
     print("\n\nActual execution time: %sh %sm %ss" % time_format(time.time() - start_time))
